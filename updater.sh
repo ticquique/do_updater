@@ -14,8 +14,6 @@ while getopts ":s:d:r:" arg; do
   esac
 done
 
-echo "$token $domain $record"
-
 echo "Update $record.$domain record"
 
 domain_url="$APIURL/domains"
