@@ -6,14 +6,15 @@ record=$DO_RECORD
 CHECKIP_URL="http://ipinfo.io/ip"
 APIURL="https://api.digitalocean.com/v2"
 
-while getopts ":t:d:r:" arg; do
+while getopts ":s:d:r:" arg; do
   case $arg in
     s) token=$OPTARG;;
-    i) domain=$OPTARG;;
-    o) record=$OPTARG;;
+    d) domain=$OPTARG;;
+    r) record=$OPTARG;;
   esac
 done
 
+echo "$token $domain $record"
 
 echo "Update $record.$domain record"
 
