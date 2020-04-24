@@ -25,10 +25,12 @@ do_domain=`curl --header "$authorization" $domain_url | jq -c ".domains[] | sele
 do_record=`curl --header "$authorization" $records_url | jq -c ".domain_records[] | select(.name == \"$record\")"`
 ip_record=`echo $do_record | jq -c -r ".data"`
 
-if [ "$ip_record" == "$external_ip" ]
+if [ -z "$do_record" ]
+then
+    curl -H "$authorization" -H "Content-Type: application/json" --data "{\"type\":\"A\", \"name\":\"$record\", \"data\":\"$external_ip\",\"priority\":null, \"port\":null, \"ttl\":1800, \"weight\": null, \"flags\": null, \"tag\":null}" -X "POST" $records_url/`echo $do_record | jq -j '.domain_record'`
+elif [ "$ip_record" == "$external_ip" ]
 then
     echo "Record $record.$domain already set to $external_ip"
 else
     curl -H "$authorization" -H "Content-Type: application/json" --data "{\"data\":\"$external_ip\"}" -X "PUT" $records_url/`echo $do_record | jq -j '.id'`
 fi
-
